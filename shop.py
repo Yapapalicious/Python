@@ -7,35 +7,40 @@ class Shop(object):
 
     def show_list(event = None):
         print("Welcome! Which do you  like to avail?")
-        print('[1] (5G)  HP Potion')
-        print('[1] (3G)  MP Potion')
-        print('[3] (10G) Status Point')
-        print('[4] Exit')
+        print('    [1] (5G)  HP Potion')
+        print('    [1] (3G)  MP Potion')
+        print('    [3] (10G) Status Point')
+        print('    [4] Exit')
 
+    @staticmethod
     def open_shop(event = None):
         show_list()
 
-
+    @staticmethod
     def check_gold(gold, choice):
         if choice == 1:
             if gold >= 5:
-                return true
+                return True
         elif choice == 2:
             if gold >= 3:
-                return true
+                return True
         elif choice == 3:
             if gold >= 10:
-                return true
+                return True
         else:
-            return false
+            return False
 
+    @staticmethod
     def buy_item(player, choice):
         if choice == 1:
             player.gold -= 5
-            player.item[0] += 1
+            player.inventory[0] += 1
+            print('HP Potion added!')
         elif choice == 2:
             player.gold -= 3
-            player.item[1] += 1
+            player.inventory[1] += 1
+            print('MP Potion added!')
         else:
             player.gold -= 10
             player.stat_points += 1
+            print('Status Point added!')
