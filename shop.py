@@ -44,3 +44,5 @@ class Shop(object):
             player.gold -= 10
             player.stat_points += 1
             print('Status Point added!')
+
+            
