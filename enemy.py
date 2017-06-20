@@ -51,3 +51,5 @@ class Enemy(object):
                 return self.MATK * 1.3
             else:
                 return self.MATK
+
+            
