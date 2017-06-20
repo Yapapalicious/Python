@@ -78,40 +78,55 @@ class Player(object):
                 print('Not a valid choice!')
             clear()
 
-    def use_skill(self, skill_type):
-        if skill_type == 1:
-            if self.current_MP >= 3:
-                self.current_MP -= 3
-                return self.ATK * 1.3
-            else:
-                return False
-        else:
-            if self.current_MP >= 3:
-                self.current_MP -= 3
-                return self.MATK * 1.3
-            else:
-                return False
 
     def is_critical(type):
             critical_strike = randint(1, 10)
             if type == 1:
-                if critical_strike >= 1 and critical_strike <= 2
+                if critical_strike >= 1 and critical_strike <= 2:
                     return True
-                else
+                else:
                     return False
-            else
-                if critical_strike == 1
+            else:
+                if critical_strike == 1:
                     return True
-                else
+                else:
                     return False
 
 
-    def get_damage(self, attack_type):
+    def get_normal_damage(self, attack_type):
         is_critical = is_critical(attack_type)
         if attack_type == 1:
             if is_critical:
+                return ATK * 1.2
+            else:
+                return ATK
+        else:
+            if is_critical:
+                return MATK * 1.2
+            else:
+                return MATK
 
-        if attack_type == 2:
+    def get_skill_damage(self, skill_type):
+        is_critical = is_critical(attack_type)
+        if skill_type == 1:
+            if is_critical:
+                return ATK * 1.5
+            else:
+                return ATK
+        else:
+            if is_critical:
+                return MATK * 1.5
+            else:
+                return MATK
+
+
+    def use_skill(self, skill_type):
+        if self.current_MP >= 3:
+            self.current_MP -= 3
+            return get_skill_damage(self, skill_type)
+        else:
+            print('Not enough MP!')
+            return False
 
 
     def level_up(self):
