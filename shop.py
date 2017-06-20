@@ -8,7 +8,7 @@ class Shop(object):
     def show_list(event = None):
         print("Welcome! Which do you  like to avail?")
         print('    [1] (5G)  HP Potion')
-        print('    [1] (3G)  MP Potion')
+        print('    [2] (3G)  MP Potion')
         print('    [3] (10G) Status Point')
         print('    [4] Exit')
 
