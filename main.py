@@ -36,7 +36,8 @@ def shop_screen(player):
         choice = int(choice)
         if choice >= 1 and choice <= 3:
             if shop.check_gold(player.gold, choice):
-                buy_item(player, choice)
+                shop.buy_item(player, choice)
+                player.show_inventory()
 
 
 
