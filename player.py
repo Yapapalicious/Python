@@ -99,72 +99,71 @@ class Player(object):
             print('Invalid Choice')
 
     @staticmethod
-    def is_critical(type):
+    def is_critical():
             critical_strike = randint(1, 10)
-            if type == 1:
-                if critical_strike >= 1 and critical_strike <= 2:
-                    return True
-                else:
-                    return False
+            if critical_strike >= 1 and critical_strike <= 2:
+                return True
             else:
-                if critical_strike == 1:
-                    return True
-                else:
-                    return False
+                return False
 
 
-    def get_skill_damage(self, skill_type):
-        if skill_type == 1:
-            if self.is_critical(skill_type):
-                return math.ceil(self.ATK * 2)
-            else:
-                return math.ceil(self.ATK * 2)
+    def use_physical_skill(self):
+        if self.is_critical():
+            return math.ceil(self.ATK * 2)
         else:
-            if is_critical(skill_type):
-                return math.ceil(self.MATK * 1.5)
-            else:
-                return math.ceil(self.MATK * 1.5)
+            return math.ceil(self.ATK * 1.5)
 
 
-    def use_skill(self, skill_type):
+    def use_magical_skill(self):
+        if self.is_critical():
+            return math.ceil(self.MATK * 2)
+        else:
+            return math.ceil(self.MATK * 1.5)
+
+
+    def check_mana(self):
         if self.current_MP >= 3:
             self.current_MP -= 3
-            return self.get_skill_damage(skill_type)
+            return True
         else:
             print('Not enough MP!')
             return False
 
 
-    def get_normal_damage(self, attack_type):
-        if attack_type == 1:
-            if self.is_critical(attack_type):
-                return math.ceil(self.ATK * 1.2)
-            else:
-                return self.ATK
+    def use_physical_attack(self):
+        if self.is_critical():
+            return math.ceil(self.ATK * 1.2)
         else:
-            if self.is_critical(attack_type):
-                return math.ceil(self.MATK * 1.2)
-            else:
-                return self.MATK
-    def use_potion(self, potion_type):
-        if potion_type == 1:
-            if self.inventory[0] > 0:
-                self.current_HP += 20
-                if self.current_HP > self.HP:
-                    self.current_HP = self.HP
-                self.inventory[0] -= 1
-                return True
-            else:
-                return False
+            return self.ATK
+
+
+    def use_magical_attack(self):
+        if self.is_critical():
+            return math.ceil(self.MATK * 1.2)
         else:
-            if self.inventory[1] > 0:
-                self.current_MP += 20
-                if self.current_MP > self.MP:
-                    self.current_MP = self.MP
-                self.inventory[0] -= 1
-                return True
-            else:
-                return False
+            return self.MATK
+
+
+    def use_hp_potion(self):
+        if self.inventory[0] > 0:
+            self.current_HP += 20
+            if self.current_HP > self.HP:
+                self.current_HP = self.HP
+            self.inventory[0] -= 1
+            return True
+        else:
+            return False
+
+    def use_mp_potion(self):
+        if self.inventory[1] > 0:
+            self.current_MP += 20
+            if self.current_MP > self.MP:
+                self.current_MP = self.MP
+            self.inventory[0] -= 1
+            return True
+        else:
+            return False
+
 
     def level_up(self):
         self.HP += randint(0, 3)
