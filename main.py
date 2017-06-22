@@ -9,7 +9,8 @@ import os
 import time
 import math
 
-clear = lambda: os.system('cls')
+def clear():
+    os.system('cls')
 
 def welcome_screen():
     print('Welcome to sapnu puas text-based adventure game')
@@ -54,8 +55,8 @@ def calculate_damage(damage, hit, subject):
 def battle_screen(player, level):
     enemy = Enemy(level)
     while enemy.is_alive and player.is_alive:
-        attack_success = False
-        while attack_success != True:
+        round_success = False
+        while round_success != True:
             clear()
             print('Dungeon Level {}'.format(level))
             print('Your HP: {}              Enemy HP: {}'.format(player.current_HP, enemy.current_HP))
@@ -64,31 +65,31 @@ def battle_screen(player, level):
             print('    [2] Magical Attack       [4] Magical Skill       [6] Use MP Potion')
             choice = input('Your Choice: ')
             if choice == '1':
-                damage = player.get_normal_damage(1)
+                damage = player.use_physical_attack()
                 calculate_damage(damage, player.HIT, enemy)
-                attack_success = True
+                round_success = True
             elif choice =='2':
-                damage = player.get_normal_damage(2)
+                damage = player.use_magical_attack()
                 calculate_damage(damage, player.HIT, enemy)
-                attack_success = True
+                round_success = True
             elif choice == '3':
-                damage = player.use_skill(1)
-                if damage:
-                    calculate_damage(damage, player.HIT, enemy)
-                    attack_success = True
+                if player.check_mana():
+                    calculate_damage(player.use_physical_skill(), player.HIT, enemy)
+                    round_success = True
             elif choice == '4':
-                damage = player.use_skill(2)
-                if damage:
-                    calculate_damage(damage, player.HIT, enemy)
-                    attack_success = True
+                if player.check_mana():
+                    calculate_damage(player.use_magical_skill(), player.HIT, enemy)
+                    round_success = True
             elif choice == '5':
-                if player.use_potion(1):
+                if player.use_hp_potion():
                     print('Health has been restored')
+                    round_success = True
                 else:
                     print('Not enough HP Potion!')
             elif choice == '6':
-                if player.use_potion(2):
+                if player.use_mp_potion():
                     print('Mana has been restored!')
+                    round_success = True
                 else:
                     print('Not enough MP Potion!')
 
@@ -115,6 +116,7 @@ def shop_screen(player):
             if shop.check_gold(player.gold, choice):
                 shop.buy_item(player, choice)
                 player.show_inventory()
+
 
 def visit_doctor(player):
     if player.gold >= 10:
