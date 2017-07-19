@@ -5,23 +5,14 @@ class Enemy(object):
 
     def __init__(self, level):
         self.is_alive = True
-        self.HP = 5
-        self.MP = 10
-        self.ATK = 1
-        self.MATK = 1
-        self.DEF = 2
-        self.MDEF = 2
-        self.HIT = 3
-        self.FLEE = 1
-        multiplier = level * 2
-        self.HP += randint(0, multiplier)
-        self.MP += randint(0, multiplier)
-        self.ATK += randint(0, multiplier)
-        self.MATK += randint(0, multiplier)
-        self.DEF += randint(0, multiplier)
-        self.MDEF += randint(0, multiplier)
-        self.HIT += randint(0, multiplier)
-        self.FLEE += randint(0, multiplier)
+        self.HP = 5 + randint(math.floor(level / 2), level)
+        self.MP = 10 + randint(math.floor(level / 2), level)
+        self.ATK = 1 + randint(math.floor(level / 2), level)
+        self.MATK = 1 + randint(math.floor(level / 2), level)
+        self.DEF = 2 + randint(0, math.floor(level / 2))
+        self.MDEF = 2 + randint(0, math.floor(level / 2))
+        self.HIT = 3 + randint(0, math.floor(level / 2))
+        self.FLEE = 1 + randint(0, math.floor(level / 2))
         self.current_HP = self.HP
         self.current_MP = self.MP
 
