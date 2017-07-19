@@ -1,9 +1,12 @@
 import os
 import math
 from random import randint
-clear = lambda: os.system('cls')
+
+def clear():
+    os.system('cls')
 
 class Player(object):
+
 
     def __init__(self, name):
         self.is_alive = True
@@ -21,6 +24,7 @@ class Player(object):
         self.gold = 10
         self.stat_points = 20
         self.inventory = [0, 0]
+        self.level = 1
 
 
     def show_stats(self):
@@ -45,6 +49,7 @@ class Player(object):
             self.show_stats()
             print('   [Q] QUIT')
             prompt = input('Your Choice: ')
+            clear()
             if prompt.isdigit():
                 prompt = int(prompt)
                 if prompt >= 1 and prompt <= 8:
@@ -54,9 +59,11 @@ class Player(object):
                         if prompt == 1:
                             self.HP += add
                             self.stat_points -= add
+                            self.current_HP += add
                         elif prompt == 2:
                             self.MP += add
                             self.stat_points -= add
+                            self.current_MP += add
                         elif prompt == 3:
                             self.ATK += add
                             self.stat_points -= add
@@ -88,12 +95,16 @@ class Player(object):
 
     def manage_character(self):
         print('    [1] Show Inventory')
-        print('    [2] Allocate Status Points')
+        print('    [2] View Status Points')
+        print('    [3] Allocate Status Points')
         print('    [Q] Go back')
         choice = input('Your Choice: ')
+        clear()
         if choice == '1':
             self.show_inventory()
         elif choice == '2':
+            self.show_stats()
+        elif choice == '3':
             self.allocate_stats()
         else:
             print('Invalid Choice')
@@ -166,12 +177,13 @@ class Player(object):
 
 
     def level_up(self):
-        self.HP += randint(0, 3)
-        self.MP += randint(0, 3)
-        self.ATK += randint(0, 3)
-        self.MATK += randint(0, 3)
-        self.DEF += randint(0, 2)
-        self.MDEF += randint(0, 2)
-        self.HIT += randint(0, 2)
-        self.FLEE += randint(0, 2)
-        self.stat_points += randint(0, 5)
+        self.HP += randint(0, 1)
+        self.MP += randint(0, 1)
+        self.ATK += randint(0, 1)
+        self.MATK += randint(0, 1)
+        self.DEF += randint(0, 1)
+        self.MDEF += randint(0, 1)
+        self.HIT += randint(0, 1)
+        self.FLEE += randint(0, 1)
+        self.stat_points += randint(0, 3)
+        self.level += 1
