@@ -8,6 +8,7 @@ import sys
 import os
 import time
 import math
+import json
 
 def clear():
     os.system('cls')
@@ -57,13 +58,14 @@ def battle_screen(player, level):
     while enemy.is_alive and player.is_alive:
         round_success = False
         while round_success != True:
-            clear()
+
             print('Dungeon Level {}'.format(level))
             print('Your HP: {}              Enemy HP: {}'.format(player.current_HP, enemy.current_HP))
             print('Your MP: {}'.format(player.current_MP))
             print('    [1] Physical Attack      [3] Physical Skill      [5] Use HP Potion       [7] RUN!')
             print('    [2] Magical Attack       [4] Magical Skill       [6] Use MP Potion')
             choice = input('Your Choice: ')
+            clear()
             if choice == '1':
                 damage = player.use_physical_attack()
                 calculate_damage(damage, player.HIT, enemy)
@@ -93,23 +95,25 @@ def battle_screen(player, level):
                 else:
                     print('Not enough MP Potion!')
 
-
         damage = enemy.get_damage()
         if enemy.is_alive:
             calculate_damage(damage, enemy.HIT, player)
-        print('Your HP: {}              Enemy HP: {}'.format(player.current_HP, enemy.current_HP))
-        print('DAMAGE: {}'.format(damage))
+
 
     if player.is_alive:
+        print('Dungeon cleared! You have just leveled up!')
         player.level_up()
         player.show_stats()
-    player.gold += randint(5, 10)
+        input("Press Enter to continue...")
+        clear()
+    player.gold += randint(0, 5)
 
 
 def shop_screen(player):
     shop = Shop()
     shop.show_list()
     choice = input('Your Choice: ')
+    clear()
     if choice.isdigit():
         choice = int(choice)
         if choice >= 1 and choice <= 3:
@@ -129,23 +133,72 @@ def visit_doctor(player):
     else:
         print('Not enough gold!')
 
-def main():
-    choice = welcome_screen()
-    is_alive = True
-    level = 1
+def save_game(player):
+    progress = player.__dict__
+    data = json.dumps(progress)
+    with open('saved_game.txt', 'w') as game:
+        game.write(data)
 
-    if choice == '1':
-        name = input("Enter your name: ")
-        player = Player(name)
-        player.allocate_stats()
-    elif choice =='2':
-        pass
-    elif choice =='3':
-        getch("Exiting.. Press any key to continue")
-        EXIT()
+def load_game():
+    if os.path.exists('saved_game.txt'):
+        game = open('saved_game.txt', 'r')
+        progress = game.read()
+        data = json.loads(progress)
+        player = Player(data['name'])
+        player.__dict__ = data
+        return player
+    else:
+        print('No game saved!')
+
+
+def save_highest_level(level):
+    highest_level = level
+    data = json.dumps(highest_level)
+    with open('highest_level.txt', 'w') as score:
+        score.write(data)
+
+
+def load_highest_level():
+    if os.path.exists('highest_level.txt'):
+        score = open('highest_level.txt', 'r')
+        highest_level = score.read()
+        data = json.loads(highest_level)
+        return data
+
+def opening_story():
+    story = ['A ' , 'long ', 'time ', 'ago.. ']
+    for i in range(len(story)):
+        sys.stdout.write(story[i])
+        sys.stdout.flush()
+        time.sleep(0.1)
+    input('\n\n\n\nPress any key to continue...')
+    clear()
+
+
+
+def main():
+    clear()
+    highest_level = 1
+    while True:
+        choice = welcome_screen()
+        clear()
+        if choice == '1':
+            opening_story()
+            name = input("Enter your name: ")
+            player = Player(name)
+            player.allocate_stats()
+            break
+        elif choice =='2':
+            player = load_game()
+            highest_level = load_highest_level()
+            if player != None:
+                break
+        elif choice =='3':
+            sys.exit()
 
     while player.is_alive:
         choice = village_screen(player.name)
+        clear()
         if choice == '1':
             player.manage_character()
         elif choice == '2':
@@ -153,9 +206,14 @@ def main():
         elif choice == '3':
             shop_screen(player)
         elif choice == '4':
-            battle_screen(player, level)
-            level += 1
+            battle_screen(player, player.level)
+        elif choice == '5':
+            save_game(player)
+        elif choice == 'Q':
+            sys.exit()
 
+    if player.level >= highest_level:
+        save_highest_level(highest_level)
 
 
 
