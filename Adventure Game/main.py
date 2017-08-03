@@ -10,9 +10,11 @@ import time
 import math
 import json
 
+# CLEAR SCREEN
 def clear():
     os.system('cls')
 
+# WELCOME SCREEN, SHOWS OPTION TO EITHER START, LOAD OR EXIT
 def welcome_screen():
     print('Welcome to sapnu puas text-based adventure game')
     print('    [1] Start Game')
@@ -20,6 +22,7 @@ def welcome_screen():
     print('    [3] Exit')
     return input('Your Choice: ')
 
+# VILLAGE SCREEN, ALLOWS THE PLAYER TO CHOOSE AMONG THE FOLLOWING
 def village_screen(name):
     print('Welcome, {}! What do you want to do?'.format(name))
     print('[1] Manage Character')
@@ -30,7 +33,7 @@ def village_screen(name):
     print('[Q] Exit Game')
     return input('Your Choice: ')
 
-
+# RETURNS TRUE IF ATTACK HITS THE TARGET, ELSE RETURNS FALSE
 def is_hit(hit, flee):
     if hit >= flee:
         return True
@@ -45,24 +48,27 @@ def is_hit(hit, flee):
         else:
             return False
 
-
+# DEDUCTS THE DAMAGE TO THE PLAYER/ENEMY HEALTH 
 def calculate_damage(damage, hit, subject):
     if is_hit(hit, subject.FLEE):
         subject.current_HP -= damage
     if subject.current_HP <= 0:
         subject.is_alive = False
 
-
+# BATTLE SCREEN, ALLOWS THE PLAYER TO EITHER ATTACK, USE SKILL, OR USE POTION.
+  AFTER THE PLAYER'S MOVE, ENEMY AUTOMATICALLY ATTACKS
+  IF ENEMY IS KILLED, PLAYER LEVELS UP, ELSE IF PLAYER IS KILLED, GAME ENDS
 def battle_screen(player, level):
     enemy = Enemy(level)
     while enemy.is_alive and player.is_alive:
         round_success = False
         while round_success != True:
-
+            print(enemy.randomize_sprite(enemy.number
+            ))
             print('Dungeon Level {}'.format(level))
             print('Your HP: {}              Enemy HP: {}'.format(player.current_HP, enemy.current_HP))
             print('Your MP: {}'.format(player.current_MP))
-            print('    [1] Physical Attack      [3] Physical Skill      [5] Use HP Potion       [7] RUN!')
+            print('    [1] Physical Attack      [3] Physical Skill      [5] Use HP Potion')
             print('    [2] Magical Attack       [4] Magical Skill       [6] Use MP Potion')
             choice = input('Your Choice: ')
             clear()
@@ -108,7 +114,7 @@ def battle_screen(player, level):
         clear()
     player.gold += randint(0, 5)
 
-
+# SHOP SCREEN, ALLOWS THE PLAYER TO BUY POTION / STAT
 def shop_screen(player):
     shop = Shop()
     shop.show_list()
@@ -121,24 +127,27 @@ def shop_screen(player):
                 shop.buy_item(player, choice)
                 player.show_inventory()
 
-
+# ALLOWS THE PLAYER TO RESTORE HEALTH/MANA IN EXCHANGE FOR GOLD
 def visit_doctor(player):
     if player.gold >= 10:
         if player.current_HP == player.HP:
             print('Health already full')
         else:
             player.current_HP = player.HP
+            player.current_MP = player.MP
             player.gold -= 10
-            print('Health has been restored!')
+            print('Health and mana has been restored!')
     else:
         print('Not enough gold!')
 
+# SAVE PROGRESS
 def save_game(player):
     progress = player.__dict__
     data = json.dumps(progress)
     with open('saved_game.txt', 'w') as game:
         game.write(data)
 
+# LOAD SAVED PROGRESS IF IT EXISTS
 def load_game():
     if os.path.exists('saved_game.txt'):
         game = open('saved_game.txt', 'r')
@@ -151,6 +160,7 @@ def load_game():
         print('No game saved!')
 
 
+# SAVES THE HIGHEST LEVEL
 def save_highest_level(level):
     highest_level = level
     data = json.dumps(highest_level)
@@ -158,6 +168,7 @@ def save_highest_level(level):
         score.write(data)
 
 
+# LOADS THE HIGHEST LEVEL THAT WAS SAVED, EXCLUDING THE CURRENT PROGRESS
 def load_highest_level():
     if os.path.exists('highest_level.txt'):
         score = open('highest_level.txt', 'r')
@@ -165,8 +176,10 @@ def load_highest_level():
         data = json.loads(highest_level)
         return data
 
+# OPENING STORY
 def opening_story():
-    story = ['A ' , 'long ', 'time ', 'ago.. ']
+    story = ["A ", "long ", "time ", "ago, ", "there ", "is ", "a ", "demon ", "who ", "has ", "done ", "nothing ", "but ", "chaos,", " and ", "destroying ", "everything ", "it ", "sees. "]
+
     for i in range(len(story)):
         sys.stdout.write(story[i])
         sys.stdout.flush()
@@ -175,7 +188,7 @@ def opening_story():
     clear()
 
 
-
+# MAIN SCREEN
 def main():
     clear()
     highest_level = 1
@@ -216,5 +229,5 @@ def main():
         save_highest_level(highest_level)
 
 
-
+# EXECUTE MAIN METHOD
 main()
